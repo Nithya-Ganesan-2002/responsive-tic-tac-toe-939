@@ -1,0 +1,34 @@
+<div class="container">
+  <div class="main-card">
+    <!-- Application Title -->
+    <h1 class="title">{{ title }}</h1>
+
+    <!-- Status / Current Turn or Winner -->
+    <div class="status">{{ statusMsg }}</div>
+    
+    <!-- Board -->
+    <div class="board" role="grid" aria-label="Tic Tac Toe Board">
+      <div 
+        *ngFor="let row of board; let i = index" 
+        class="row"
+        role="row">
+        <button
+          *ngFor="let cell of row; let j = index"
+          class="cell"
+          [ngClass]="{'X-cell': board[i][j] === 'X', 'O-cell': board[i][j] === 'O'}"
+          role="gridcell"
+          [attr.aria-label]="'Row ' + (i+1) + ', Col ' + (j+1) + ', ' + (board[i][j] ? board[i][j] : 'Empty')"
+          [disabled]="board[i][j] !== '' || !!winner"
+          (click)="makeMove(i, j)">
+            {{ board[i][j] }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="actions">
+      <button class="btn primary" (click)="newGame()" [disabled]="inGame">Start New</button>
+      <button class="btn secondary" (click)="resetGame()">Reset</button>
+    </div>
+  </div>
+</div>
