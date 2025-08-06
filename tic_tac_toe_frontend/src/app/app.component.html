@@ -3,6 +3,18 @@
     <!-- Application Title -->
     <h1 class="title">{{ title }}</h1>
 
+    <!-- Mode Toggle -->
+    <div class="actions" style="margin-bottom: 0.5em;">
+      <button
+        class="btn"
+        [ngClass]="{'primary': aiEnabled, 'secondary': !aiEnabled}"
+        (click)="toggleAIMode()"
+        [disabled]="inGame"
+        style="min-width: 9.5em;">
+        {{ aiEnabled ? 'Play vs. AI' : 'Play 2 Player' }}
+      </button>
+    </div>
+
     <!-- Status / Current Turn or Winner -->
     <div class="status">{{ statusMsg }}</div>
     
@@ -18,7 +30,12 @@
           [ngClass]="{'X-cell': board[i][j] === 'X', 'O-cell': board[i][j] === 'O'}"
           role="gridcell"
           [attr.aria-label]="'Row ' + (i+1) + ', Col ' + (j+1) + ', ' + (board[i][j] ? board[i][j] : 'Empty')"
-          [disabled]="board[i][j] !== '' || !!winner"
+          [disabled]="
+            board[i][j] !== '' ||
+            !!winner ||
+            (aiEnabled && currentPlayer !== humanPlayer) ||
+            aiThinking
+          "
           (click)="makeMove(i, j)">
             {{ board[i][j] }}
         </button>
@@ -27,8 +44,15 @@
 
     <!-- Action Buttons -->
     <div class="actions">
-      <button class="btn primary" (click)="newGame()" [disabled]="inGame">Start New</button>
-      <button class="btn secondary" (click)="resetGame()">Reset</button>
+      <button class="btn primary"
+        (click)="newGame()"
+        [disabled]="inGame">
+        Start New
+      </button>
+      <button class="btn secondary"
+        (click)="resetGame()">
+        Reset
+      </button>
     </div>
   </div>
 </div>
